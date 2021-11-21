@@ -10,7 +10,8 @@ class Reserve(models.Model):
         ('r', 'Reserved'),
         ('a', 'Another Person'),
         ('c', 'Canceled'),
-        ('f', 'Free')
+        ('f', 'Free'),
+        ('w', 'Waiting')
     )
     user = models.ForeignKey(User,
                              on_delete=models.CASCADE,
@@ -29,7 +30,7 @@ class Reserve(models.Model):
     status = models.CharField(_('Status'),
                               max_length=1,
                               choices=STATUS,
-                              default='a')
+                              default='w')
 
     def __str__(self):
         return f'{self.user.full_name}'
