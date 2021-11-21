@@ -3,8 +3,10 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
 from apps.reservations.models import Reserve
+from apps.barbers.models import Barber
+from apps.accounts.models import User
 
-from .serializers import ReserveSerializer
+from .serializers import (ReserveSerializer, )
 
 
 @api_view(['POST'])
@@ -50,3 +52,62 @@ def reserve_time(request):
             status=status.HTTP_400_BAD_REQUEST
         )
 
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def barber_reservations_list(request):
+    try:
+        barber = Barber.objects.get(barber=request.user)
+        barber_reservations = Reserve.objects.filter(barber=barber)
+        reservations_list = ReserveSerializer(barber_reservations, many=True)
+
+        return Response(
+            data={
+                'data': reservations_list.data
+            },
+            status=status.HTTP_200_OK
+        )
+    except Barber.DoesNotExist:
+        return Response(
+            data={
+                'msg': "Barber does not exist"
+            },
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
+        return Response(
+            data={
+                'msg': str(e)
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def user_reservations_list(request):
+    try:
+        user = User.objects.get(username=request.user)
+        user_reservations = Reserve.objects.filter(user=user)
+        reservations_list = ReserveSerializer(user_reservations, many=True)
+
+        return Response(
+            data={
+                'data': reservations_list.data
+            },
+            status=status.HTTP_200_OK
+        )
+    except Barber.DoesNotExist:
+        return Response(
+            data={
+                'msg': "User does not exist"
+            },
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
+        return Response(
+            data={
+                'msg': str(e)
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
