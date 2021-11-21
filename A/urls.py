@@ -36,6 +36,11 @@ urlpatterns = [
             'barbers/',
             include('apps.barbers.api.v1.urls'),
             name='barbers'
+        ),
+        path(
+            'reserves/',
+            include('apps.reservations.api.v1.urls'),
+            name='reservations'
         )
     ]))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
