@@ -41,7 +41,12 @@ urlpatterns = [
             'reserves/',
             include('apps.reservations.api.v1.urls'),
             name='reservations'
-        )
+        ),
+        path(
+            'payments/',
+            include('apps.payments.api.v1.urls'),
+            name='payments'
+        ),
     ]))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
